@@ -15,3 +15,6 @@ graphics/evening.bmp
 graphics/sunset.bmp
 **/tune.mid
 **/.DS_Store
+# the driver's compiled cache beside a module it ran
+**/*.cwasm
+**/*.cwasm.key
