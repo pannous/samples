@@ -1,0 +1,17 @@
+# what building and running a sample leaves beside its source: executables without an extension, wasm, wast
+**/*
+!**/*.*
+!**/
+**/*.wasm
+**/*.wast
+# the prebuilt component wasm/component_reflection.warp uses (shapes.wasm, which wasm/import_compiled.warp imports,
+# is built from wasm/shapes.warp: warp's scripts/samples.sh builds it)
+!wasm/rust_demo.wasm
+# what samples write beside themselves: database tables (storage/orm), stored values (storage/store), pictures
+# (graphics/load_bmp, make_image), a tune (sound)
+**/*.database.sqlite
+**/*.stored.json
+graphics/evening.bmp
+graphics/sunset.bmp
+**/tune.mid
+**/.DS_Store
