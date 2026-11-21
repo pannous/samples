@@ -9,7 +9,7 @@
 # Library: libc (stdlib.h)
 # Wrapper: ffi_i32_i32
 
-import abs from "c"
+use c
 abs(-42)  # Expected: 42
 # abs(0)    // Expected: 0
 # abs(100)  // Expected: 100
@@ -21,7 +21,7 @@ abs(-42)  # Expected: 42
 # Library: libm (math.h)
 # Wrapper: ffi_f64_f64
 
-import cbrt from "m"
+use m
 cbrt(27.0)  # Expected: 3.0
 # cbrt(-8.0)  // Expected: -2.0
 
@@ -32,7 +32,7 @@ cbrt(27.0)  # Expected: 3.0
 # Library: libc (string.h)
 # Wrapper: ffi_str_i32
 
-import strlen from "c"
+use c
 strlen("hello")  # Expected: 5
 # strlen("") // Expected: 0
 # strlen("Warp Language")  // Expected: 13
@@ -44,7 +44,7 @@ strlen("hello")  # Expected: 5
 # Library: libc (stdlib.h)
 # Wrapper: ffi_str_f64
 
-import atof from "c"
+use c
 atof("3.14159")  # Expected: 3.14159
 # atof("2.71828")  // Expected: 2.71828
 # atof("42")       // Expected: 42.0
@@ -56,7 +56,7 @@ atof("3.14159")  # Expected: 3.14159
 # Library: libm (math.h)
 # Wrapper: ffi_f64_f64_f64
 
-import fmin from "m"
+use m
 fmin(3.5, 2.1)  # Expected: 2.1
 # fmin(100.0, 50.0)  // Expected: 50.0
 # fmin(-5.0, -10.0)  // Expected: -10.0

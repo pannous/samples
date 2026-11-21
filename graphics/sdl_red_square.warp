@@ -2,16 +2,7 @@
 # SDL2 Red Square Demo - Pure FFI, no compile-time dependencies
 # Run with: ./warp samples/graphics/sdl_red_square.warp
 
-import SDL_Init from 'SDL2'
-import SDL_CreateWindow from 'SDL2'
-import SDL_CreateRenderer from 'SDL2'
-import SDL_SetRenderDrawColor from 'SDL2'
-import SDL_RenderClear from 'SDL2'
-import SDL_RenderPresent from 'SDL2'
-import SDL_Delay from 'SDL2'
-import SDL_DestroyRenderer from 'SDL2'
-import SDL_DestroyWindow from 'SDL2'
-import SDL_Quit from 'SDL2'
+use SDL2
 
 # Initialize SDL with video subsystem
 SDL_Init(0x00000020)

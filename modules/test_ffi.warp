@@ -1,4 +1,4 @@
 #!/usr/bin/env warp
 # Test FFI imports
-import cbrt from "m"
+use m
 cbrt(8.0)
