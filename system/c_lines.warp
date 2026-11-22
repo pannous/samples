@@ -6,7 +6,7 @@ getppid(): i32 from 'c'
 use c
 
 setenv("GREETING", "hi", 1)
-print "process ok", getpid() > 0
-print "parent distinct", getpid() != getppid()
-print "GREETING is", getenv("GREETING")
-print "errno 2 is", strerror(2)
+print "process ok ${getpid() > 0}"
+print "parent distinct ${getpid() != getppid()}"
+print "GREETING is ${getenv("GREETING")}"
+print "errno 2 is ${strerror(2)}"
