@@ -1,10 +1,7 @@
-#!/usr/bin/env warp
+#!/usr/bin/env wap
 # The last three readings. A fourth drops the oldest. 90 is 20 + 30 + 40.
-use ring
+use collections
 
 log = Ring(3)
-log.push(10)
-log.push(20)
-log.push(30)
-log.push(40)
-sum(log.to_list())
+for reading in [10, 20, 30, 40] { log.push(reading) }
+print log.to_list().map(reading => reading as int).sum()
