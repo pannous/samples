@@ -40,7 +40,7 @@ focal = 900.0
 eye() := [focus#1 + distance * cos(lift) * sin(turn), focus#2 - distance * cos(lift) * cos(turn),
 	focus#3 + distance * sin(lift)]
 # a world point on the screen: [x, y, depth]
-def seen(p: float[], e: float[]) as float[] {
+seen(p: float[], e: float[]) as float[] := {
 	f = [focus#1 - e#1, focus#2 - e#2, focus#3 - e#3]
 	fl = norm(f)
 	f = [f#1 / fl, f#2 / fl, f#3 / fl]
@@ -55,7 +55,7 @@ shade(c: float[], light: float) := rgb(int(255 * min(1.0, c#1 * light)), int(255
 	int(255 * min(1.0, c#3 * light)))
 
 # the floor's grid, every sphere's shadow on it, then the spheres far to near, each lit from above
-def drawn(w: World) {
+drawn(w: World) := {
 	e = eye()
 	clear(rgb(176, 182, 193))
 	for k in -6 to 6 {

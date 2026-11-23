@@ -22,7 +22,7 @@ last_x = 0.0
 last_y = 0.0
 was_down = false
 
-def stroke(x1, y1, x2, y2) {
+stroke(x1, y1, x2, y2) := {
 	dabs = max(cell(max(abs(x2 - x1), abs(y2 - y1)) / spacing), 1)
 	for i in 1 to dabs {
 		circle(x1 + (x2 - x1) * i / dabs, y1 + (y2 - y1) * i / dabs, brush, hsv(turn, 0.8, 0.9))

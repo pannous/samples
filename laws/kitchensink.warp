@@ -48,7 +48,7 @@ test products == 14
 # ---- functions: definitions, implicit it, lambdas, closures, recursion
 square := it * it
 test square(9) == 81
-def fib(n) { if n < 2 { return n }; fib(n - 1) + fib(n - 2) }
+fib(n) := { if n < 2 { return n }; fib(n - 1) + fib(n - 2) }
 test fib(10) == 55
 twice(f: function, x) := f(f(x))
 test twice(x => x + 3, 1) == 7

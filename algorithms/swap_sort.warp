@@ -4,7 +4,7 @@
 #         if A[i] < A[j] then
 #             swap A[i] and A[j]
 
-def swap(xs, i, j){
+swap(xs, i, j) := {
     t = xs#i
     xs#i = xs#j
     xs#j = t

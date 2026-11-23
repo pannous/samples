@@ -13,7 +13,7 @@ global game_over = false
 global foods_eaten = 0
 
 # the next food: a fixed walk over the board, so every game is the same
-def spawn_food() {
+spawn_food() := {
 	for attempt in 1 to width * height {
 		x = (foods_eaten * 7 + attempt * 3) % width
 		y = (foods_eaten * 5 + attempt * 11) % height
@@ -22,14 +22,14 @@ def spawn_food() {
 	return [0, 0]
 }
 
-def is_free(position) {
+is_free(position) := {
 	x = position#1
 	y = position#2
 	return x >= 0 and x < width and y >= 0 and y < height and not (position in snake)
 }
 
 # turn toward the food, never into a wall or itself when another way is free
-def steer() {
+steer() := {
 	head = snake#1
 	wanted = direction
 	if food#1 > head#1 { wanted = [1, 0] }
@@ -45,7 +45,7 @@ def steer() {
 	return direction
 }
 
-def update() {
+update() := {
 	head = snake#1
 	new_head = [head#1 + direction#1, head#2 + direction#2]
 	if not is_free(new_head) {
@@ -63,7 +63,7 @@ def update() {
 	return 1
 }
 
-def render() {
+render() := {
 	for y in 0..height {
 		line = ""
 		for x in 0..width {

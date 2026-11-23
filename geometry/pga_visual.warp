@@ -16,7 +16,7 @@ rim = ball ⋏ ground # sphere ⋏ plane: a circle
 holes = ball ⋏ beam # sphere ⋏ line: two points
 
 pink = color(0xE0207A)
-def scene() {
+scene() := {
 	clear(paper)
 	sketch(ground, gray)
 	sketch(slope, blue)

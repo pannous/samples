@@ -6,18 +6,18 @@
 global input = ""
 global pos = 0
 
-def peek() := if pos < input.bytecount then byte_slice(input, pos, pos + 1) else ""
-def advance() { pos = pos + 1; return byte_slice(input, pos - 1, pos) }
-def skip_spaces() { while peek() == " " { advance() } }
-def is_digit_text(c) := c >= "0" and c <= "9"
-def is_letter_text(c) := c >= "a" and c <= "z"
+peek() := if pos < input.bytecount then byte_slice(input, pos, pos + 1) else ""
+advance() := { pos = pos + 1; return byte_slice(input, pos - 1, pos) }
+skip_spaces() := { while peek() == " " { advance() } }
+is_digit_text(c) := c >= "0" and c <= "9"
+is_letter_text(c) := c >= "a" and c <= "z"
 
 # Grammar:
 # expr   = term (('+' | '-') term)*
 # term   = factor (('*' | '/' | '%' | '^') factor)*
 # factor = number | '(' expr ')' | '-' factor | func '(' expr ')' | constant
 
-def parse_expr() {
+parse_expr() := {
 	left = parse_term()
 	while true {
 		skip_spaces()
@@ -28,7 +28,7 @@ def parse_expr() {
 	}
 }
 
-def parse_term() {
+parse_term() := {
 	left = parse_factor()
 	while true {
 		skip_spaces()
@@ -41,7 +41,7 @@ def parse_term() {
 	}
 }
 
-def apply(name, arg) {
+apply(name, arg) := {
 	if name == "sin" { return sin(arg) }
 	if name == "cos" { return cos(arg) }
 	if name == "tan" { return tan(arg) }
@@ -52,7 +52,7 @@ def apply(name, arg) {
 	return error "Unknown function: " + name
 }
 
-def parse_factor() {
+parse_factor() := {
 	skip_spaces()
 	c = peek()
 	if c == "(" {
@@ -84,14 +84,14 @@ def parse_factor() {
 	return parse_number()
 }
 
-def parse_number() {
+parse_number() := {
 	skip_spaces()
 	start = pos
 	while is_digit_text(peek()) or peek() == "." { advance() }
 	return byte_slice(input, start, pos) as float
 }
 
-def calc(text) {
+calc(text) := {
 	input = text
 	pos = 0
 	return parse_expr()

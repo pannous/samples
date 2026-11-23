@@ -2,7 +2,7 @@
 # Quicksort implementation
 # Classic divide-and-conquer sorting
 
-def quicksort(arr) {
+quicksort(arr) := {
 	if arr.length <= 1 : return arr
 
 	pivot = arr[arr.length /! 2]
@@ -14,7 +14,7 @@ def quicksort(arr) {
 }
 
 # Partitioning version (Lomuto): swap changes arr in place (lists are shared); it also returns the list
-def quicksort_partitioned(arr, lo, hi) {
+quicksort_partitioned(arr, lo, hi) := {
 	if lo >= hi { return arr }
 
 	pivot = arr[hi]
@@ -31,7 +31,7 @@ def quicksort_partitioned(arr, lo, hi) {
 	return quicksort_partitioned(arr, i + 1, hi)
 }
 
-def swap(arr, i, j) {
+swap(arr, i, j) := {
 	temp = arr[i]
 	arr[i] = arr[j]
 	arr[j] = temp

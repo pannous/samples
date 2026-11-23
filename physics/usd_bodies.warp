@@ -29,7 +29,7 @@ type Body: {
 }
 
 # the bodies of a .bodies text: a `body` line opens one, `end` closes it, # starts a comment
-def bodies_read(source: text) as list {
+bodies_read(source: text) as list := {
 	bodies = []
 	b = ø
 	for line in lines(source) {
@@ -85,7 +85,7 @@ type World: {
 }
 
 # the bodies placed: their centre of mass at `at` (x y z a body), turned by `turns` (a quaternion a body) from their pose
-def world_of(bodies: list, at: float[], turns: list) as World {
+world_of(bodies: list, at: float[], turns: list) as World := {
 	pos: float[] = []
 	vel: float[] = []
 	quat: float[] = []
@@ -112,7 +112,7 @@ body_quat(w, i) := [w.quat#(4 * i - 3), w.quat#(4 * i - 2), w.quat#(4 * i - 1), 
 body_vec(v, i) := [v#(3 * i - 2), v#(3 * i - 1), v#(3 * i)]
 
 # every sphere in the world: x y z r and its body, five numbers a sphere (each body's quaternion as a matrix once)
-def world_spheres(w: World) as list {
+world_spheres(w: World) as list := {
 	all = []
 	for i in 1 to #w.bodies {
 		qw = w.quat#(4 * i - 3)
@@ -166,7 +166,7 @@ point_vel(w, i, p) := {
 
 # the force of one contact on body a at point p (b = 0: the floor), n pointing from b to a, `depth` deep; `shared` is
 # how many contacts the pair has now: they share the pair's spring, so ten touching spheres are no stiffer than one
-def contact_force(w: World, a: int, b: int, p: float[], n: float[], depth: float, shared: int, dt: float) as float[] {
+contact_force(w: World, a: int, b: int, p: float[], n: float[], depth: float, shared: int, dt: float) as float[] := {
 	ba = w.bodies#a
 	ma = ba.mass
 	m = ma
@@ -198,7 +198,7 @@ def contact_force(w: World, a: int, b: int, p: float[], n: float[], depth: float
 }
 
 # a force at point p added to body i's force and torque sums
-def exerted(w: World, force: float[], torque: float[], i: int, f: float[], p: float[]) {
+exerted(w: World, force: float[], torque: float[], i: int, f: float[], p: float[]) := {
 	r = arm(w, i, p)
 	force#(3 * i - 2) = force#(3 * i - 2) + f#1
 	force#(3 * i - 1) = force#(3 * i - 1) + f#2
@@ -209,7 +209,7 @@ def exerted(w: World, force: float[], torque: float[], i: int, f: float[], p: fl
 }
 
 # the world one step of dt later
-def stepped(w: World, dt: float) as World {
+stepped(w: World, dt: float) as World := {
 	n = #w.bodies
 	force: float[] = []
 	torque: float[] = []
@@ -320,14 +320,14 @@ def stepped(w: World, dt: float) as World {
 }
 
 # the world `seconds` later, in steps of STEP
-def simulated(w: World, seconds: float) as World {
+simulated(w: World, seconds: float) as World := {
 	steps = int(seconds / STEP + 0.5)
 	for _ in 1 to steps { w = stepped(w, STEP) }
 	w
 }
 
 # the kinetic energy of the world, moving and turning
-def kinetic_energy(w: World) as float {
+kinetic_energy(w: World) as float := {
 	total = 0.0
 	for i in 1 to #w.bodies {
 		b = w.bodies#i

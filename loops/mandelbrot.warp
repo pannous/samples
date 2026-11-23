@@ -3,7 +3,7 @@
 # Classic fractal computation
 
 # decimal literals are exact in warp: the iteration runs in floats, or its fractions would grow without end
-def mandelbrot(cx, cy, max_iter) {
+mandelbrot(cx, cy, max_iter) := {
 	x = 0.0 as float
 	y = 0.0 as float
 	iter = 0
@@ -17,7 +17,7 @@ def mandelbrot(cx, cy, max_iter) {
 }
 
 # ASCII art rendering
-def render(width, height, max_iter) {
+render(width, height, max_iter) := {
 	chars = " .:-=+*#%@"
 	for row in 0..height {
 		cy = (row - height / 2) * 4.0 / height

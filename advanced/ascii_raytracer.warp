@@ -4,18 +4,18 @@
 
 type Vec3 { x: float, y: float, z: float }
 
-def vec(x, y, z) := Vec3 { x: x, y: y, z: z }
-def add(a, b) := vec(a.x + b.x, a.y + b.y, a.z + b.z)
-def sub(a, b) := vec(a.x - b.x, a.y - b.y, a.z - b.z)
-def mul(v, s) := vec(v.x * s, v.y * s, v.z * s)
-def dot(a, b) := a.x * b.x + a.y * b.y + a.z * b.z
-def length(v) := √dot(v, v)
-def normalize(v) := mul(v, 1.0 / length(v))
+vec(x, y, z) := Vec3 { x: x, y: y, z: z }
+add(a, b) := vec(a.x + b.x, a.y + b.y, a.z + b.z)
+sub(a, b) := vec(a.x - b.x, a.y - b.y, a.z - b.z)
+mul(v, s) := vec(v.x * s, v.y * s, v.z * s)
+dot(a, b) := a.x * b.x + a.y * b.y + a.z * b.z
+length(v) := √dot(v, v)
+normalize(v) := mul(v, 1.0 / length(v))
 
 type Sphere { center: Vec3, radius: float, color: Vec3 }
 type Ray { origin: Vec3, direction: Vec3 }
 
-def intersect(ray, sphere) {
+intersect(ray, sphere) := {
 	oc = sub(ray.origin, sphere.center)
 	a = dot(ray.direction, ray.direction)
 	b = 2.0 * dot(oc, ray.direction)
@@ -34,7 +34,7 @@ global spheres = [
 ]
 global light = normalize(vec(1, 1, -1))
 
-def trace(ray) {
+trace(ray) := {
 	closest = 1e10
 	hit_sphere = None
 	for sphere in spheres {

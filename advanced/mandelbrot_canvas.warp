@@ -5,7 +5,7 @@ width = 240
 height = 160
 max_iter = 60
 
-def escape_time(cx, cy) {
+escape_time(cx, cy) := {
 	x = 0.0 as float
 	y = 0.0 as float
 	iter = 0

@@ -1,7 +1,7 @@
 #!/usr/bin/env warp
 # Collatz conjecture - count steps to reach 1, and plot the steps of the first thousand numbers
 use draw
-def collatz(n) = if n == 1 then 0 else 1 + collatz(if n % 2 == 0 then n / 2 else 3 * n + 1)
+collatz(n) := if n == 1 then 0 else 1 + collatz(if n % 2 == 0 then n / 2 else 3 * n + 1)
 
 lengths = [collatz(n) for n in 1 to 1000]
 

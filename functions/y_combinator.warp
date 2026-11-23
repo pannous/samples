@@ -2,8 +2,8 @@
 # The Y combinator: recursion without a function calling itself by name.
 # Paul Graham named his startup accelerator Y Combinator after it, for reasons only he would understand.
 # Z is the Y combinator for languages that evaluate arguments first: the inner v => … waits until called.
-def half(f: function) = x => f(v => x(x)(v))
-def Z(f) = half(f)(half(f))
+half(f: function) := x => f(v => x(x)(v))
+Z(f) := half(f)(half(f))
 
 fact = Z(self => n => if n < 2 then 1 else n * self(n - 1))
 print fact(10)

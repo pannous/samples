@@ -5,19 +5,19 @@
 # Pure function with := (single expression)
 def square := it * it
 def twice := it * 2
-def add(a, b) := a + b
+add(a, b) := a + b
 
 # Named parameters
-def greet(name) := "Hello, " + name + "!"
+greet(name) := "Hello, " + name + "!"
 
 # Multi-line function with block
-def factorial(n) {
+factorial(n) := {
 	if n <= 1 { return 1 }
 	return n * factorial(n - 1)
 }
 
 # Higher-order functions (no map needed: a function of one item applies to a whole list, see below)
-def filter(list, predicate: function) {
+filter(list, predicate: function) := {
 	var result = []
 	for item in list {
 		if predicate(item) {
@@ -27,7 +27,7 @@ def filter(list, predicate: function) {
 	return result
 }
 
-def reduce(list, fn: function, initial) {
+reduce(list, fn: function, initial) := {
 	acc = initial
 	for item in list {
 		acc = fn(acc, item)
@@ -52,7 +52,7 @@ result = (square numbers)
 increment = add(1, _)  # partial: increment(x) = add(1, x)
 
 # Closures
-def counter(start) {
+counter(start) := {
 	count = start
 	return () => {
 		count = count + 1

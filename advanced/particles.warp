@@ -19,7 +19,7 @@ friction = 0.99
 width = 120
 height = 80
 
-def spawn(x, y, n) {
+spawn(x, y, n) := {
 	for _ in 0..n {
 		angle = random() * 2 * pi
 		speed = random() * 1.5 + 0.5
@@ -36,7 +36,7 @@ def spawn(x, y, n) {
 }
 
 # a particle one step later: warp's objects are values, so the step gives back the changed copy
-def moved(p) {
+moved(p) := {
 	p.vy = p.vy + gravity
 	p.vx = p.vx * friction
 	p.vy = p.vy * friction
@@ -56,11 +56,11 @@ def moved(p) {
 	p
 }
 
-def update() {
+update() := {
 	particles = particles.map(moved)
 }
 
-def render() {
+render() := {
 	for p in particles {
 		if p.life > 0 { circle(p.x, p.y, p.life + 0.5, with_alpha(p.color, p.life)) }
 	}

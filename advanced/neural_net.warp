@@ -3,21 +3,21 @@
 # XOR problem solver
 use matrix
 
-def sigmoid(x) := 1.0 / (1.0 + exp(-x))
-def sigmoid_derivative(x) := x * (1.0 - x)
+sigmoid(x) := 1.0 / (1.0 + exp(-x))
+sigmoid_derivative(x) := x * (1.0 - x)
 
 # 2 inputs, 4 hidden, 1 output; seeded, every run learns alike
 random_seed(42)
 # hyperparameters
 learning_rate = 0.5
 epochs = 10000
-def weight() { random() * 2 - 1 }
+weight() := { random() * 2 - 1 }
 hidden_weights = matrix(2, 4, weight)
 output_weights = matrix(4, 1, weight)
 hidden_bias = [weight() for j in 0..4]
 output_bias = weight()
 
-def forward(input) {
+forward(input) := {
 	hidden = []
 	for j in 0..4 {
 		total = hidden_bias[j]
@@ -32,7 +32,7 @@ def forward(input) {
 	return hidden, sigmoid(output_sum)
 }
 
-def train(input, target) {
+train(input, target) := {
 	global hidden_weights, output_weights, hidden_bias, output_bias
 	(hidden, output) = forward(input)
 

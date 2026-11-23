@@ -6,7 +6,7 @@ width = 960
 height = 540
 max_iter = 60
 
-def escape_time(cx, cy) {
+escape_time(cx, cy) := {
 	x = 0.0 as float
 	y = 0.0 as float
 	iter = 0
@@ -20,7 +20,7 @@ def escape_time(cx, cy) {
 }
 
 # a pixel's color: black inside the set, outside bands of orange and purple by how fast it escapes
-def ink(column, row) {
+ink(column, row) := {
 	steps = escape_time(-2.2 + column * 3.2 / width, -1.1 + row * 2.2 / height)
 	if steps == max_iter then black else if steps % 2 == 1 then orange else purple
 }

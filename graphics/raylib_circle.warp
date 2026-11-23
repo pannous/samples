@@ -11,7 +11,7 @@ SECONDS_SHOWN = 5
 # a color of your own is packed RGBA, little endian 0xAABBGGRR: MAROON is 0xFF2E1990
 DEEP_PURPLE = 0xFF802040
 
-def shapes_drawn() {
+shapes_drawn() := {
 	BeginDrawing()
 	ClearBackground(RAYWHITE)
 	DrawText("Warp Raylib FFI Demo", 250, 20, 30, DARKGRAY)

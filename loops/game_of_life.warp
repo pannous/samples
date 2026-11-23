@@ -10,10 +10,10 @@ generations = 16
 global grid = []
 for i in 0 to width * height - 1 { grid.push(false) }
 
-def cell(x, y) { return grid#(y * width + x + 1) }
+cell(x, y) := { return grid#(y * width + x + 1) }
 
 # Initialize with glider
-def spawn_glider(x, y) {
+spawn_glider(x, y) := {
 	for (dx, dy) in [(1, 0), (2, 1), (0, 2), (1, 2), (2, 2)] {
 		grid#((y + dy) * width + x + dx + 1) = true
 	}
@@ -21,7 +21,7 @@ def spawn_glider(x, y) {
 
 spawn_glider(2, 2)
 
-def count_neighbors(x, y) {
+count_neighbors(x, y) := {
 	neighbors = 0
 	for dy in - 1 to 1 {
 		for dx in - 1 to 1 {
@@ -35,7 +35,7 @@ def count_neighbors(x, y) {
 	return neighbors
 }
 
-def step() {
+step() := {
 	next = []
 	for y in 0..height {
 		for x in 0..width {
@@ -47,7 +47,7 @@ def step() {
 	grid = next
 }
 
-def render() {
+render() := {
 	for y in 0..height {
 		line = ""
 		for x in 0..width {

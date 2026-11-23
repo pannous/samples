@@ -33,7 +33,7 @@ global lloyd = []
 global emeans = []
 global tick = 0
 
-def new_round() {
+new_round() := {
 	seed(round_number)
 	cell_width = (panel - 2 * margin) / columns
 	cell_height = (height - top - 2 * margin) / rows
@@ -54,7 +54,7 @@ def new_round() {
 }
 
 # the steps after `done` of the race (0 to 1): e-means' batches and Lloyd's passes over the same share of the epochs
-def draw_race(done) {
+draw_race(done) := {
 	clear(paper)
 	draw_panel(0, "k-means (Lloyd)", lloyd, (1 + floor(done * epochs)) as int)
 	draw_panel(panel, "e-means", emeans, (1 + round(done * (count(emeans) - 1))) as int)
@@ -62,7 +62,7 @@ def draw_race(done) {
 	show()
 }
 
-def draw_panel(left, title, steps, shown) {
+draw_panel(left, title, steps, shown) := {
 	centroids = steps#shown
 	labels = nearest_labels(points, centroids)
 	for i in 1 to count(points) { rect(left + points#i#1 - 1, points#i#2 - 1, dot_size, dot_size, colours#(labels#i)) }
