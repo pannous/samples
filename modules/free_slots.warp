@@ -2,9 +2,11 @@
 # The free slots of a 9:00-17:00 workday between meetings, at least 30 minutes each (intervals, time durations)
 use intervals
 use time
-at(h: int, m: int) := Instant(h * 3600000 + m * 60000)
+# times of day as minutes since midnight, the intervals' numbers
+at(h: int, m: int): float := float(h * 60 + m)
+MINUTE := Duration("1m")
+clock(minutes: float): text := time(Instant(0) + MINUTE * int(minutes))[0:5]
 day = extent(at(9, 0), at(17, 0))
 meetings = [extent(at(13, 0), at(14, 0)), extent(at(9, 30), at(10, 15)), extent(at(10, 0), at(11, 0)), extent(at(16, 40), at(17, 0))]
-least = "30m" as Duration
-slots = subtract_intervals(day, meetings).filter(s => least <= s.hi - s.lo)
-join([text(s.lo.time)[0: 5] + "-" + text(s.hi.time)[0: 5] + " (" + format(Duration(s.hi - s.lo), long: yes) + ")" for s in slots], "\n")
+slots = subtract_intervals(day, meetings).filter(e => extent_length(e) >= 30)
+print(slots.map(e => "${clock(e.lo)}-${clock(e.hi)} (${format(MINUTE * int(extent_length(e)), long: yes)})").join("\n"))
