@@ -60,21 +60,22 @@ url = \"mysql://db.internal/billing\"
 
 broken = "service = \"x\"\n[server\nport = 1\n"
 
-check(name: text, source: text) := {
-	print("== " + name)
-	config = try { parse_toml(source) } catch e { print("not TOML: " + e.message); ø }
-	if config != ø {
-		problems = json_validate(config, schema)
-		if count(problems) == 0 {
-			print("valid; with defaults:")
-			print(to_json(json_merge_patch(defaults, config)))
-		} else {
-			print(text(count(problems)) + " problems:")
-			for problem in problems { print("  " + problem) }
-		}
+report(name: text, source: text) := {
+	print "== ${name}"
+	config = try { parse_toml(source) } catch e {
+		print "not TOML: ${e.message}"
+		return
+	}
+	problems = json_validate(config, schema)
+	if problems is empty {
+		print "valid; with defaults:"
+		print to_json(json_merge_patch(defaults, config))
+	} else {
+		print "${#problems} problems:"
+		for problem in problems { print "  ${problem}" }
 	}
 }
 
-check("good.toml", good)
-check("bad.toml", bad)
-check("broken.toml", broken)
+report("good.toml", good)
+report("bad.toml", bad)
+report("broken.toml", broken)
