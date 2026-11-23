@@ -1,12 +1,12 @@
-#!/usr/bin/env warp
-# A leaderboard kept by score (lib/sorted.warp): place, the top of the board, a score band
+#!/usr/bin/env wap
+# A leaderboard kept by score (lib/sorted.wap): place, the top of the board, a score band
 use sorted
 
-board = SortedMap([[980, "Bea"], [1200, "Ada"], [1500, "Cal"], [1100, "Dee"], [1750, "Eve"], [90, "Fay"]])
+board = sorted_map([[980, "Bea"], [1200, "Ada"], [1500, "Cal"], [1100, "Dee"], [1750, "Eve"], [90, "Fay"]])
 n = board.size()
 top = [board.at(n), board.at(n - 1), board.at(n - 2)]
-band = board.between(1000, 1500)
-place = n - board.rank(1750) + 1
-print([board.get(s) for s in top])
-print(band)
-place * 1000 + count(band) * 100 + (top#1 - top#3) + board.min()
+print top.map(score => board.get(score))
+print board.between(1000, 1500)
+print "Eve's place: ${n - board.rank(1750) + 1}, the lowest score ${board.min()}"
+s = sorted_set(["pear", "apple", "fig"])
+print [s.items, s.add("kiwi").items, s.has("fig"), s.remove("fig").items, s.union(sorted_set(["date"])).items]
