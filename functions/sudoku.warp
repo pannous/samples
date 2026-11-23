@@ -1,59 +1,41 @@
-#!/usr/bin/env warp
+#!/usr/bin/env wap
 # Sudoku Solver
 # Backtracking algorithm
-# the grid is a flat list of 81 cells, row by row; lists are shared, so each try fills a copy and solve returns the
-# solved grid (or [] if none)
+# the grid is a flat list of 81 cells, row by row; each try fills a copy and solve returns the solved grid (or [] if
+# none)
 
-parse_grid(s) := {
-	cells = []
-	# a char as int is its code point ('5' as int is 53), its text as int is the digit
-	for c in s.replace(".", "0") { cells.push(c as text as int) }
-	return cells
+parse_grid(s: text): list<int> := s.replace(".", "0").codepoints.map(c => int("${c}"))
+
+cell(grid: list<int>, x: int, y: int): int := grid[y * 9 + x]
+
+is_valid(grid: list<int>, row: int, col: int, num: int): bool := {
+	box_x = col ÷ 3 * 3
+	box_y = row ÷ 3 * 3
+	in_lines = (0 upto 9).any(i => cell(grid, i, row) == num or cell(grid, col, i) == num)
+	in_box = (0 upto 9).any(i => cell(grid, box_x + i % 3, box_y + i ÷ 3) == num)
+	not in_lines and not in_box
 }
 
-cell(grid, x, y) := { return grid#(y * 9 + x + 1) }
-
-is_valid(grid, row, col, num) := {
-	for i in 0..9 {
-		if cell(grid, i, row) == num or cell(grid, col, i) == num { return false }
-	}
-	box_x = (col /! 3) * 3
-	box_y = (row /! 3) * 3
-	for dy in 0..3 {
-		for dx in 0..3 {
-			if cell(grid, box_x + dx, box_y + dy) == num { return false }
+solve(grid: list<int>): list<int> := {
+	open = (0 upto 81).filter(i => grid[i] == 0)
+	if open is empty { return grid }
+	i = open[0]
+	for num in 1 upto 10 {
+		if is_valid(grid, i ÷ 9, i % 9, num) {
+			candidate = grid.copy()
+			candidate[i] = num
+			solved = solve(candidate)
+			if solved { return solved }
 		}
 	}
-	return true
+	[]
 }
 
-solve(grid) := {
-	for i in 0..81 {
-		if grid#(i + 1) == 0 {
-			for num in 1..10 {
-				if is_valid(grid, i /! 9, i % 9, num) {
-					candidate = grid.copy()
-					candidate#(i + 1) = num
-					solved = solve(candidate)
-					if solved { return solved }
-				}
-			}
-			return []
-		}
-	}
-	return grid
-}
-
-print_grid(grid) := {
-	for y in 0..9 {
+print_grid(grid: list<int>) := {
+	for y in 0 upto 9 {
 		if y % 3 == 0 and y > 0 { print "------+-------+------" }
-		line = ""
-		for x in 0..9 {
-			if x % 3 == 0 and x > 0 { line = line + "| " }
-			value = cell(grid, x, y)
-			line = line + (if value == 0 then "." else text(value)) + " "
-		}
-		print line
+		cells = (0 upto 9).map(x => (if x % 3 == 0 and x > 0 then "| " else "") + (if cell(grid, x, y) == 0 then "." else "${cell(grid, x, y)}"))
+		print cells.join(" ") + " "
 	}
 }
 
@@ -72,4 +54,4 @@ if solution {
 } else {
 	print "No solution exists"
 }
-solution#1 * 100 + solution#2 * 10 + solution#3
+solution[0] * 100 + solution[1] * 10 + solution[2]
