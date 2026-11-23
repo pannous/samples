@@ -1,5 +1,5 @@
 #!/usr/bin/env warp
-# paint_text.warp's picture painted on the GPU: one fragment shader colors every pixel, the shapes by testing where the
+# paint_text.wap's picture painted on the GPU: one fragment shader colors every pixel, the shapes by testing where the
 # pixel lies and "hello" by how much the system font's letters cover it (text_coverage, which label uses too), given
 # to the shader as $glyph, three pixels to a number (a float holds 24 bits exactly, and a shader's values hold 4096
 # numbers natively). The colors are warp's, each as its [red, green, blue]

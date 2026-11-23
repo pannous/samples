@@ -1,6 +1,6 @@
 # bee.splat
 
-A Gaussian-splatting capture of a Japanese honeybee (Apis cerana japonica), read by gaussian_splats.warp: 24000
+A Gaussian-splatting capture of a Japanese honeybee (Apis cerana japonica), read by gaussian_splats.wap: 24000
 splats in the .splat layout lib/splats.warp reads (32 bytes each, 768000 bytes).
 
 ## Source
@@ -33,4 +33,4 @@ scale, and of that set the 24000 highest scores were written, largest first.
 The published scene is all 978285 splats. `scripts/bee-full.sh` downloads that SOG (the file the scene player
 loads, `https://d28zzqy0iyovbz.cloudfront.net/ae58ed2c/v1/meta.json`) and writes `data/splat-speed/bee-full.splat`,
 every Gaussian, in the SOG's order, no opacity cut and no binning. The file is gitignored (31305120 bytes).
-`gaussian_splats.warp --full` reads it, or pass the path. Same licence and attribution as above.
+`gaussian_splats.wap --full` reads it, or pass the path. Same licence and attribution as above.

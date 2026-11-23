@@ -15,5 +15,5 @@ squares(n: u32) as Header := {
 }
 h = squares(10)
 h.total + h.tag
-# DONE works ONLY with warp build: runs as `warp structs.warp` too
+# DONE works ONLY with warp build: runs as `warp structs.wap` too
 # h

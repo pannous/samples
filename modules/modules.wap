@@ -11,6 +11,6 @@ stack = Stack()
 stack.push(3)
 print stack.pop()
 
-# a file beside the program: lib.warp defines ok()
+# a file beside the program: lib.wap defines ok()
 use lib
 print ok()

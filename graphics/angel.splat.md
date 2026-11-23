@@ -1,6 +1,6 @@
 # angel.splat
 
-A Gaussian-splatting capture of an angel statue holding flowers, read by gaussian_splats.warp: 12000 splats in the
+A Gaussian-splatting capture of an angel statue holding flowers, read by gaussian_splats.wap: 12000 splats in the
 .splat layout lib/splats.warp reads (32 bytes each, 384 KB).
 
 Cut from `angel.splat` of the dataset https://huggingface.co/datasets/Nehc/splats (540377 splats, MIT licence, below):

@@ -1,0 +1,4 @@
+#!/usr/bin/env warp
+@primitive
+# `warp build native hello.wap` makes the executable hello
+print "Hello"

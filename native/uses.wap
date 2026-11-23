@@ -1,0 +1,5 @@
+@primitive
+# a primitive file using another primitive file: `use "doubling.wap"` brings its declarations
+use "doubling.wap"
+print(text_of(doubled(21)))
+print(text_of(sum(Pair(3, 4))))

@@ -4,8 +4,8 @@
 !**/
 **/*.wasm
 **/*.wast
-# the prebuilt component wasm/component_reflection.warp uses (shapes.wasm, which wasm/import_compiled.warp imports,
-# is built from wasm/shapes.warp: warp's scripts/samples.sh builds it)
+# the prebuilt component wasm/component_reflection.wap uses (shapes.wasm, which wasm/import_compiled.wap imports,
+# is built from wasm/shapes.wap: warp's scripts/samples.sh builds it)
 !wasm/rust_demo.wasm
 # what samples write beside themselves: database tables (storage/orm), stored values (storage/store), pictures
 # (graphics/load_bmp, make_image), a tune (sound)

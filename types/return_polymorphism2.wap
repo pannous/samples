@@ -1,6 +1,6 @@
 #!/usr/bin/env warp
 # one function, a variant per parameter type: the argument's type picks it
-# (return_polymorphism.warp picks a variant by its result type instead)
+# (return_polymorphism.wap picks a variant by its result type instead)
 format(number: int) := "Integer \(number)"
 format(number: float) := "Float \(number)"
 
