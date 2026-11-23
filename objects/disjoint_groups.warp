@@ -1,9 +1,7 @@
-#!/usr/bin/env warp
-# Five people. A friendship joins their groups. 23 is two groups, and person 1's group has three.
-use disjoint
+#!/usr/bin/env wap
+# Five people. A friendship joins their groups: two groups, and person 1's group has three.
+use graphs
 
-people = DisjointSet(5)
-people.unite(1, 2)
-people.unite(2, 3)
-people.unite(4, 5)
-people.components() * 10 + people.size_of(1)
+people = disjoint_set(5)
+for pair in [[1, 2], [2, 3], [4, 5]] { people.unite(pair[0], pair[1]) }
+print "${people.components()} groups; person 1's has ${people.size_of(1)}, and 3 and 4 are ${if people.connected(3, 4) then "together" else "apart"}"
