@@ -1,14 +1,13 @@
-#!/usr/bin/env warp
-# A settings tool, git config style: keys kept as JSON in a file (cli choices, json, os, file)
-#   warp samples/apps/settings_cli.warp set theme dark   |   get theme   |   list --format keys   |   unset theme
-# without arguments it plays a short session in a fresh file under $TMPDIR
+#!/usr/bin/env wap
+# A settings tool, git config style: keys kept as JSON in a file (cli choices, json, file)
+#   wap samples/apps/settings_cli.warp set theme dark   |   get theme   |   list --format keys   |   unset theme
+# without arguments it plays a short session in a fresh file of the temp folder
 use json
-use os
 use file
 use cli
 
 options = [
-	{name: "file", short: "f", help: "the JSON file of the settings (else warp_settings_demo.json in $TMPDIR)"},
+	{name: "file", short: "f", help: "the JSON file of the settings (else wap_settings_demo.json in the temp folder)"},
 	{name: "scope", short: "s", choices: ["user", "project"], default: "user", help: "which settings"}
 ]
 commands = {
@@ -18,71 +17,80 @@ commands = {
 	list: {help: "show every key", options: [{name: "format", choices: ["lines", "keys", "json"], default: "lines"}]}
 }
 # a mistake on the command line is shown as its message, never a trace
-parsed(argv: list) as map := try { parse_commands(options, commands, argv) } catch e { print(e.message); {help: no, command: ø} }
+parsed(argv: list<text>): map<text, any> := try { parse_commands(options, commands, argv) } catch e {
+	print e.message
+	{help: no, command: ø}
+}
 
-given = if count(args) > 0 then parsed(args) else {help: no, command: ø}
-store = given.get("file") ?? temp_folder() + "/warp_settings_demo.json"
+given: map<text, any> = if args then parsed(args) else {help: no, command: ø}
+store: text = given.get("file") ?? temp_folder() + "/wap_settings_demo.json"
 
-load() as map := if exists(store) then parse_json(read(store)) else {user: {}, project: {}}
-keep(all: map) := write(store, to_json(all))
+# the settings of each scope, key to value
+type Settings = map<text, map<text, text>>
+empty_settings(): Settings := {user: {}, project: {}}
+texts_of(scope: any): map<text, text> := {
+	read = scope as map<text, any>
+	out: map<text, text> = {}
+	for key in read.keys() { out[key] = "${read[key]}" }
+	out
+}
+load(): Settings := {
+	if not exists(store) { return empty_settings() }
+	stored = parse_json(read(store)) as map<text, any>
+	all: Settings = {}
+	for scope in stored.keys() { all[scope] = texts_of(stored[scope]) }
+	all
+}
+keep(all: Settings) := write(store, to_json(all))
 
 set_key(scope: text, key: text, value: text) := {
 	all = load()
 	all[scope][key] = value
 	keep(all)
-	print(scope + "." + key + " = " + value)
+	print "${scope}.${key} = ${value}"
 }
-
 get_key(scope: text, key: text, fallback: text) := {
 	these = load()[scope]
-	if key in these { print(these[key]) }
-	else if fallback != "" { print(fallback + " (default)") }
-	else { print("no " + scope + "." + key) }
+	print if these.has(key) then these[key] else if fallback != "" then "${fallback} (default)" else "no ${scope}.${key}"
 }
-
 unset_key(scope: text, key: text) := {
 	all = load()
-	these = all[scope]
-	if key in these {
-		rest = {}
-		for k in keys(these) { if k != key { rest[k] = these[k] } }
-		all[scope] = rest
-		keep(all)
-		print("removed " + scope + "." + key)
-	} else { print("no " + scope + "." + key) }
+	if not all[scope].has(key) { return print "no ${scope}.${key}" }
+	rest: map<text, text> = {}
+	for k in all[scope].keys().filter(k => k != key) { rest[k] = all[scope][k] }
+	all[scope] = rest
+	keep(all)
+	print "removed ${scope}.${key}"
 }
-
 list_keys(scope: text, format: text) := {
 	these = load()[scope]
-	if format == "json" { print(to_json(these)) }
-	else if format == "keys" { print(join(keys(these), " ")) }
-	else { for k in keys(these) { print(k + " = " + these[k]) } }
+	if format == "json" then print to_json(these)
+	else if format == "keys" then print these.keys().join(" ")
+	else for k in these.keys() { print "${k} = ${these[k]}" }
 }
-
-command(o: map) := {
+run(o: map<text, any>) := {
 	verb = o["command"]
 	scope = o["scope"]
-	if verb == "set" { set_key(scope, o["key"], o["value"]) }
-	else if verb == "get" { get_key(scope, o["key"], o["default"]) }
-	else if verb == "unset" { unset_key(scope, o["key"]) }
-	else if verb == "list" { list_keys(scope, o["format"]) }
+	if verb == "set" then set_key(scope, o["key"], o["value"])
+	else if verb == "get" then get_key(scope, o["key"], o["default"])
+	else if verb == "unset" then unset_key(scope, o["key"])
+	else if verb == "list" then list_keys(scope, o["format"])
 }
-
 # one parsed command line: the help, or the command it names (nothing after a mistake)
-act(o: map) := {
-	if not o["help"] { if o["command"] != ø { command(o) } }
-	else if o["command"] == ø { print(cli_commands_help("settings", options, commands)) }
-	else { print(cli_command_text("settings", commands, o["command"])) }
+act(o: map<text, any>) := {
+	if o["help"] == no { if o["command"] != ø { run(o) } }
+	else if o["command"] == ø { print cli_commands_help("settings", options, commands) }
+	else { print cli_command_text("settings", commands, o["command"]) }
 }
 
-if count(args) > 0 {
+if args {
 	act(given)
 } else {
-	keep({user: {}, project: {}})
+	keep(empty_settings())
 	for argv in [["set", "theme", "dark"], ["set", "editor", "vim"], ["-s", "project", "set", "indent", "tabs"], ["get", "theme"], ["get", "font", "-d", "mono"], ["--scope=project", "list"], ["list", "--format", "keys"], ["list", "--format=json"], ["unset", "editor"], ["list"], ["list", "--format", "yaml"], ["-s", "team", "list"], ["remove", "theme"], [], ["list", "--help"], ["--help"]] {
-		print("$ settings " + join(argv, " "))
+		print "$ settings ${argv.join(" ")}"
 		act(parsed(argv))
 	}
-	print("stored: " + read(store))
-	print("demo file removed: " + text(delete_file(store)))
+	print "stored: ${read(store)}"
+	print "demo file removed: ${delete_file(store)}"
 }
