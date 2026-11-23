@@ -1,3 +1,3 @@
 #!/usr/bin/env warp
 # how many words are in a sentence?
-count "the quick brown fox".split
+print #words("the quick brown fox")

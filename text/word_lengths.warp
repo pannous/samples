@@ -1,5 +1,5 @@
 #!/usr/bin/env warp
-# the number of words: length takes the list itself
-print length split "the quick brown fox"
-# the length of each word: a word that takes the list itself needs the explicit broadcast, `all` (or `each`)
-print length all (split "the quick brown fox")
+# the number of words, and the length of each word
+sentence = words("the quick brown fox")
+print #sentence
+print sentence.map(word => #word)
