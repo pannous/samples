@@ -13,7 +13,7 @@ Alan Turing,alan@bletchley.uk,Manchester,<script>alert(1)</script>
 rows = csv_maps(recipients)
 print(text(count(rows)) + " letters")
 print("")
-print(table_text([[row["name"], row["email"], row["city"]] for row in rows], {headers: ["name", "email", "city"], align: ["left", "left", "left"]}))
+print(table_text([[row["name"], row["email"], row["city"]] for row in rows], headers: ["name", "email", "city"]))
 
 page = "<!doctype html>
 <html><head><meta charset=\"utf-8\"><title>Letters</title></head>

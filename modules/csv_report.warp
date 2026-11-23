@@ -9,4 +9,4 @@ for row in sales[1:] {
 	totals[region] = (totals.get(region) ?? 0) + int(row#3)
 }
 rows = [[region, totals.get(region)] for region in keys(totals)]
-table_text(rows, {headers: ["region", "units"], style: "markdown"})
+print(table_text(rows, headers: ["region", "units"], style: markdown))

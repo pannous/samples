@@ -9,10 +9,10 @@ key(name) := casefold(nfkc(name))
 
 rows = []
 for name in names { rows = rows + [[name, text(count(codepoint_numbers(name))), text(count(codepoint_numbers(nfc(name)))), key(name)]] }
-print(table_text(rows, {headers: ["as typed", "code points", "after NFC", "match key"]}))
+print(table_text(rows, headers: ["as typed", "code points", "after NFC", "match key"]))
 print("")
-groups = {}
-order = []
+groups: map<text, list<text>> = {}
+order: list<text> = []
 for name in names {
 	k = key(name)
 	if not (k in groups) { groups[k] = []; order = order + [k] }

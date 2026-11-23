@@ -29,7 +29,7 @@ for row in rows {
 	lines = lines + [[row["sku"], row["name"], row["location"], int(row["qty"]), cents(int(row["unit_cents"])), cents(value)]]
 }
 print("")
-print(table_text(lines, {headers: ["sku", "name", "location", "qty", "unit", "value"], align: ["left", "left", "left", "right", "right", "right"]}))
+print(table_text(lines, headers: ["sku", "name", "location", "qty", "unit", "value"]))
 print("stock value: " + cents(total))
 
 print("")
@@ -40,7 +40,7 @@ for loc in unique([row["location"] for row in rows]) {
 	for row in mine { sum = sum + int(row["qty"]) * int(row["unit_cents"]) }
 	places = places + [[loc, count(mine), cents(sum)]]
 }
-print(table_text(places, {headers: ["location", "skus", "value"], align: ["left", "right", "right"]}))
+print(table_text(places, headers: ["location", "skus", "value"]))
 
 # at or below the reorder level: order back up to twice that level
 low = [row for row in rows if int(row["qty"]) <= int(row["reorder"])]
