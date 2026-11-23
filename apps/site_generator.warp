@@ -1,4 +1,4 @@
-#!/usr/bin/env warp
+#!/usr/bin/env wap
 # A tiny static site generator: pages in markdown with yaml front matter, poured into one mustache layout (markdown, yaml, template)
 use markdown
 use yaml
@@ -17,37 +17,41 @@ layout = "<!doctype html>
 </body></html>"
 
 sources = [
-	"---\ntitle: Hello warp\nslug: index\ndate: 2026-11-05\nauthor: Ada\ntags: [intro, news]\n---\n# Welcome\n\nThis site is *generated* by a warp program.\n\n- fast\n- small\n",
+	"---\ntitle: Hello wap\nslug: index\ndate: 2026-11-05\nauthor: Ada\ntags: [intro, news]\n---\n# Welcome\n\nThis site is *generated* by a wap program.\n\n- fast\n- small\n",
 	"---\ntitle: Release 0.2\nslug: release-0-2\ndate: 2026-11-03\nauthor: Ada\ntags: [news]\n---\n## What changed\n\n1. JSON numbers stay whole\n2. A [changelog](https://example.com/log) link\n",
-	"---\ntitle: About\nslug: about\ndate: 2026-11-01\nauthor: Bob\ntags: []\n---\nWe write **wasm**.\n\n```\nwarp run site.warp\n```\n"
+	"---\ntitle: About\nslug: about\ndate: 2026-11-01\nauthor: Bob\ntags: []\n---\nWe write **wasm**.\n\n```\nwap site.wap\n```\n"
 ]
 
 # split '---' front matter from the markdown body
-split_page(source: text) as map := {
+split_page(source: text): map<text, any> := {
 	parts = source.split("---\n")
-	meta = parse_yaml(parts[1])
-	meta["body"] = markdown_html(join(parts[2..], "---\n"))
+	meta = parse_yaml(parts[1]) as map<text, any>
+	meta["body"] = markdown_html(parts[2:].join("---\n"))
 	meta
 }
+# a page as the navigation and the tag index link it
+link(page: map<text, any>): map<text, any> := {title: page["title"], slug: page["slug"]}
+tags_of(page: map<text, any>): list<any> := page["tags"] as list<any>
 
 # newest first: the yaml dates are ISO texts, so they sort as texts
-pages = sort([split_page(s) for s in sources], by: p => p["date"]).reverse()
-nav = [{title: p["title"], slug: p["slug"]} for p in pages]
-out = temp_folder() + "/warp_site"
+pages = sources.map(split_page).sorted(by: page => "${page["date"]}").reverse
+nav = pages.map(link)
+out = temp_folder() + "/wap_site"
+ensured_folder(out)
 for page in pages {
-	page["site"] = "warp notes"
+	page["site"] = "wap notes"
 	page["pages"] = nav
 	page_html = mustache(layout, page)
-	write(out + "/" + page["slug"] + ".html", page_html)
-	print("=== " + page["slug"] + ".html")
-	print(page_html)
+	write("${out}/${page["slug"]}.html", page_html)
+	print "=== ${page["slug"]}.html"
+	print page_html
 }
 
 # a tag index: every tag with the pages that carry it, alphabetically
 tag_layout = "<h1>Tags</h1>\n<ul>\n{{#tags}}<li>{{name}}: {{#pages}}<a href=\"{{slug}}.html\">{{title}}</a> {{/pages}}</li>\n{{/tags}}</ul>"
-names = sort(unique(flatten([p["tags"] for p in pages])))
-tags = [{name: t, pages: [{slug: p["slug"], title: p["title"]} for p in pages if t in p["tags"]]} for t in names]
-write(out + "/tags.html", mustache(tag_layout, {tags: tags}))
-print("=== tags.html")
-print(read(out + "/tags.html") as html)
-print("wrote " + text(count(pages) + 1) + " pages")
+tag_entry(tag: any): map<text, any> := {name: tag, pages: pages.filter(page => tags_of(page).contains(tag)).map(link)}
+names = pages.flat_map(tags_of).map(tag => "${tag}").unique().sorted()
+write("${out}/tags.html", mustache(tag_layout, {tags: names.map(tag_entry)}))
+print "=== tags.html"
+print read("${out}/tags.html")
+print "wrote ${#pages + 1} pages"
