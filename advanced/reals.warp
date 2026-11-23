@@ -1,5 +1,5 @@
-#!/usr/bin/env warp
+#!/usr/bin/env wap
 # a typed declaration, then a little arithmetic with π
-real x
-x = 3
+use math
+x: float = 3
 x * x + 2π
