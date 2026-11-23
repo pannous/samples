@@ -3,6 +3,7 @@
 # three-way split of the bill (csv, money, tables)
 use csv
 use money
+use fractions
 use tables
 
 export = "date,category,description,amount,currency
@@ -16,36 +17,30 @@ export = "date,category,description,amount,currency
 2026-10-15,office,Cables,0.20,EUR"
 
 rows = csv_maps(export)
-print(text(count(rows)) + " expenses")
+print("${#rows} expenses")
+
+amount_of(row: map<text, text>): Money := money_parse("${row["amount"]} ${row["currency"]}")
+summed(items: list<map<text, text>>, code: text): Money := items.map(amount_of).fold(money_of(0, code), (a, b) => a + b)
+having(items: list<map<text, text>>, field: text, value: text): list<map<text, text>> := items.filter(row => row[field] == value)
 
 # the totals per currency, then per category in each currency
-currencies = unique([row["currency"] for row in rows])
-for code in currencies {
-	mine = [row for row in rows if row["currency"] == code]
-	categories = unique([row["category"] for row in mine])
-	lines = []
-	total = money_of("0", code)
-	for category in categories {
-		items = [row for row in mine if row["category"] == category]
-		sum = money_of("0", code)
-		for item in items { sum = sum + money_parse(item["amount"], {currency: code, style: "en"}) }
-		total = total + sum
-		lines = lines + [[category, count(items), money_format(sum)]]
-	}
-	lines = lines + [["total", count(mine), money_format(total)]]
+for code in unique(rows.map(row => row["currency"])) {
+	mine = having(rows, "currency", code)
+	total = summed(mine, code)
+	lines = unique(mine.map(row => row["category"])).map(category => [category, #having(mine, "category", category), money_format(summed(having(mine, "category", category), code))])
 	print("")
-	print(code + ":")
-	print(table_text(lines, {headers: ["category", "items", "amount"], align: ["left", "right", "right"]}))
-	print("in German: " + money_format(total, "de"))
+	print("${code}:")
+	print(table_text(lines + [["total", #mine, money_format(total)]], headers: ["category", "items", "amount"]))
+	print("in German: ${money_format(total, "de")}")
 	if code == "EUR" {
 		# the net amount and the 19% VAT inside a gross total, rounded half-even to the cent
-		net = money_times(total, 100 / 119, "half_even")
-		print("net " + money_format(net) + " + VAT " + money_format(total - net))
+		net = money_times(total, fraction(100, 119), HalfEven)
+		print("net ${money_format(net)} + VAT ${money_format(total - net)}")
 		shares = money_split(total, 3)
-		print("split three ways: " + join([money_format(s) for s in shares], ", ") + " (sum " + money_format(shares[0] + shares[1] + shares[2]) + ")")
+		print("split three ways: ${shares.map(share => money_format(share)).join(", ")} (sum ${money_format(shares[0] + shares[1] + shares[2])})")
 	}
 }
 
 # amounts are whole cents: 0.10 + 0.20 is exactly 0.30
 print("")
-print("0.10 + 0.20 = " + money_format(money_of("0.10", "EUR") + money_of("0.20", "EUR")))
+print("0.10 + 0.20 = ${money_format(money_of(0.10, "EUR") + money_of(0.20, "EUR"))}")
