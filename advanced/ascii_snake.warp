@@ -1,92 +1,79 @@
-#!/usr/bin/env warp
-# Snake Game
-# Classic arcade game, playing itself: the snake steers toward the food
-# positions are [x, y] pairs, read with #1 and #2; the game state is global
+#!/usr/bin/env wap
+# Snake, playing itself: the snake steers toward the food, never into a wall or itself while another way is free;
+# each turn a frame, drawn in place
+use terminal
+use units
 
-width = 20
-height = 15
-global snake = [[10, 7], [9, 7], [8, 7]]
-global direction = [1, 0]
-global food = [15, 7]
+WIDTH := 20
+HEIGHT := 15
+TURNS := 60
+FOOD_SCORE := 10
+
+class Spot { x: int, y: int }
++(a: Spot, b: Spot): Spot := Spot(a.x + b.x, a.y + b.y)
+==(a: Spot, b: Spot): bool := a.x == b.x and a.y == b.y
+RIGHT := Spot(1, 0)
+LEFT := Spot(-1, 0)
+DOWN := Spot(0, 1)
+UP := Spot(0, -1)
+
+global snake = [Spot(10, 7), Spot(9, 7), Spot(8, 7)]
+global direction = RIGHT
+global food = Spot(15, 7)
 global score = 0
-global game_over = false
+global game_over = no
 global foods_eaten = 0
 
 # the next food: a fixed walk over the board, so every game is the same
-spawn_food() := {
-	for attempt in 1 to width * height {
-		x = (foods_eaten * 7 + attempt * 3) % width
-		y = (foods_eaten * 5 + attempt * 11) % height
-		if not ([x, y] in snake) { return [x, y] }
+spawn_food(): Spot := {
+	for attempt in 1 to WIDTH * HEIGHT {
+		spot = Spot((foods_eaten * 7 + attempt * 3) % WIDTH, (foods_eaten * 5 + attempt * 11) % HEIGHT)
+		if not snake.contains(spot) { return spot }
 	}
-	return [0, 0]
+	Spot(0, 0)
 }
 
-is_free(position) := {
-	x = position#1
-	y = position#2
-	return x >= 0 and x < width and y >= 0 and y < height and not (position in snake)
-}
+is_free(spot: Spot): bool := spot.x >= 0 and spot.x < WIDTH and spot.y >= 0 and spot.y < HEIGHT and not snake.contains(spot)
 
 # turn toward the food, never into a wall or itself when another way is free
 steer() := {
-	head = snake#1
-	wanted = direction
-	if food#1 > head#1 { wanted = [1, 0] }
-	if food#1 < head#1 { wanted = [-1, 0] }
-	if food#1 == head#1 and food#2 > head#2 { wanted = [0, 1] }
-	if food#1 == head#1 and food#2 < head#2 { wanted = [0, -1] }
-	for option in [wanted, direction, [0, 1], [0, -1], [1, 0], [-1, 0]] {
-		if is_free([head#1 + option#1, head#2 + option#2]) {
-			direction = option
-			return direction
-		}
-	}
-	return direction
+	head = snake[0]
+	wanted = if food.x > head.x then RIGHT else if food.x < head.x then LEFT else if food.y > head.y then DOWN else if food.y < head.y then UP else direction
+	free = [wanted, direction, DOWN, UP, RIGHT, LEFT].filter(way => is_free(head + way))
+	if free { direction = free[0] }
 }
 
 update() := {
-	head = snake#1
-	new_head = [head#1 + direction#1, head#2 + direction#2]
-	if not is_free(new_head) {
-		game_over = true
-		return 0
+	next = snake[0] + direction
+	if not is_free(next) {
+		game_over = yes
+		return
 	}
-	snake = [new_head] + snake
-	if new_head == food {
-		score = score + 10
-		foods_eaten = foods_eaten + 1
+	snake = [next] + snake
+	if next == food {
+		score += FOOD_SCORE
+		foods_eaten += 1
 		food = spawn_food()
 	} else {
-		snake = snake.slice(0, count(snake) - 1)
+		snake.pop()
 	}
-	return 1
 }
+
+cell(spot: Spot): text := if spot == snake[0] then "@" else if snake.contains(spot) then "o" else if spot == food then "*" else "."
 
 render() := {
-	for y in 0..height {
-		line = ""
-		for x in 0..width {
-			cell = "."
-			if [x, y] == food { cell = "*" }
-			if [x, y] in snake { cell = "o" }
-			if [x, y] == snake#1 { cell = "@" }
-			line = line + cell
-		}
-		print line
-	}
-	print "Score: " + text(score)
+	for y in 0 upto HEIGHT { print (0 upto WIDTH).map(x => cell(Spot(x, y))).join("") }
+	print "Score: ${score}"
 }
 
-# each turn a frame: clear() shows it anew, in a terminal and in the playground
-for turn in 1 to 60 {
+for turn in 1 to TURNS {
 	if not game_over {
 		steer()
 		update()
 	}
-	clear()
+	clear_screen()
 	render()
-	sleep 50ms
+	sleep(50ms)
 }
 if game_over { print "GAME OVER" }
 score
