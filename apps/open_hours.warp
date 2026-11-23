@@ -1,24 +1,17 @@
-#!/usr/bin/env warp
-# Which shops are open at a fixed reference instant: opening windows are durations since midnight (9h, 17h), and an
-# Instant compared with a duration compares its time of day (time, units, tables)
+#!/usr/bin/env wap
+# Which shops are open at a fixed reference instant: opening windows are times since midnight (9h, 17h), compared
+# with the instant's time of day (time, units, tables)
 use time
 use units
 use tables
 
-ref = "2026-11-05T14:00:00Z" as Instant
-shops = [
-	{name: "Bakery", open: 6h, close: 13h},
-	{name: "Post office", open: 9h, close: 17h},
-	{name: "Supermarket", open: 8h, close: 22h},
-	{name: "Night club", open: 22h, close: 24h}]
+class Shop { name: text, open: Quantity, close: Quantity }
+reference = "2026-11-05T14:00:00Z" as Instant
+clock = quantity(day_time(reference))
+shops = [Shop("Bakery", 6h, 13h), Shop("Post office", 9h, 17h), Shop("Supermarket", 8h, 22h), Shop("Night club", 22h, 24h)]
 
-rows = []
-open = 0
-for s in shops {
-	state = "closed"
-	if ref >= s["open"] and ref < s["close"] { state = "open"; open = open + 1 }
-	rows = rows + [[s["name"], text(s["open"]) + " - " + text(s["close"]), state]]
-}
-print("as of " + ref.text() + " (year " + text(ref.year) + ", hour " + text(ref.hour) + "): " + text(open) + " of " + text(count(shops)) + " shops open")
-print("")
-print(table_text(rows, {headers: ["shop", "hours", "status"]}))
+is_open(shop: Shop): bool := clock >= shop.open and clock < shop.close
+rows = shops.map(shop => [shop.name, "${shop.open} - ${shop.close}", if is_open(shop) then "open" else "closed"])
+print "as of ${reference} (${clock.to(h)} since midnight): ${#shops.filter(is_open)} of ${#shops} shops open"
+print ""
+print table_text(rows, headers: ["shop", "hours", "status"])
