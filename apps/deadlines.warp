@@ -4,27 +4,21 @@
 use time
 use tables
 
-today = "2026-11-05T12:00:00Z" as Instant
-soon = 2 * 24 * 3600 * 1000
+today = Instant("2026-11-05T12:00:00Z")
+soon = Duration("2d")
+class Deadline { name: text, due: Instant }
 deadlines = [
-	{name: "Tax return", due: "2026-10-31"},
-	{name: "Conference talk", due: "2026-11-06T09:30:00Z"},
-	{name: "Rent", due: "2026-11-07"},
-	{name: "Passport renewal", due: "2026-12-01"},
-	{name: "Invoice #42", due: "2026-11-04T17:00:00Z"},
-	{name: "Car service", due: "2027-01-15"}]
+	Deadline("Tax return", Instant("2026-10-31")),
+	Deadline("Conference talk", Instant("2026-11-06T09:30:00Z")),
+	Deadline("Rent", Instant("2026-11-07")),
+	Deadline("Passport renewal", Instant("2026-12-01")),
+	Deadline("Invoice #42", Instant("2026-11-04T17:00:00Z")),
+	Deadline("Car service", Instant("2027-01-15"))]
 
-rows = []
-late = 0
-for d in deadlines {
-	due = d["due"] as Instant
-	left = due - today
-	state = "later"
-	if left < 0 { state = "overdue"; late = late + 1 } else if left <= soon { state = "due soon" }
-	shown = Duration(abs(left)) as text
-	if left < 0 { shown = shown + " ago" }
-	rows = rows + [[d["name"], text(due.date), state, shown, days_between(today.ms, due.ms)]]
-}
-print("as of " + text(today.date) + ": " + text(count(deadlines)) + " deadlines, " + text(late) + " overdue")
+state(left: Duration): text := if left < Duration(0) then "overdue" else if left <= soon then "due soon" else "later"
+remaining(left: Duration): text := if left < Duration(0) then "${abs(left)} ago" else "${left}"
+rows = deadlines.map(d => [d.name, date(d.due), state(d.due - today), remaining(d.due - today), "${days(d.due - today)}"])
+late = deadlines.filter(d => d.due < today)
+print("as of ${date(today)}: ${#deadlines} deadlines, ${#late} overdue")
 print("")
-print(table_text(rows, {headers: ["deadline", "due", "status", "remaining", "days"], align: ["left", "left", "left", "right", "right"]}))
+print(table_text(rows, headers: ["deadline", "due", "status", "remaining", "days"]))
