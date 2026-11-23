@@ -1,4 +1,4 @@
-#!/usr/bin/env warp
+#!/usr/bin/env wap
 # A report on a batch of links, as a crawler's first pass sees them (url)
 #   each link parsed into its parts, grouped by host, its query read as a map, relative links resolved
 #   against the page they came from, and a search link built back with its values percent-encoded
@@ -16,48 +16,41 @@ links = [
 	"https://cdn.example.net/img/logo.png?v=3"
 ]
 
-# a link as the page means it: relative ones resolved against the page
-absolute = [resolve_url(page, link) for link in links]
-
-print("links on " + page + ":")
-for i in 0 ..< count(links) {
-	kind = if parse_url(links[i]).scheme == nil then "relative" else "absolute"
-	print("  " + kind + "  " + links[i])
-	print("      -> " + absolute[i])
+print "links on ${page}:"
+for link in links {
+	kind = if parse_url(link).scheme is empty then "relative" else "absolute"
+	print "  ${kind}  ${link}"
+	print "      -> ${resolve_url(page, link)}"
 }
+
+# each link as the page means it: relative ones resolved against the page
+urls = links.map(link => parse_url(resolve_url(page, link)))
 
 # hosts and how many links each has, in first-seen order
-hosts = []
-for link in absolute { h = parse_url(link).host; if h != nil and not (h in hosts) { hosts = hosts + [h] } }
-print("hosts:")
-for h in hosts {
-	these = [l for l in absolute if parse_url(l).host == h]
-	print("  " + h + ": " + text(count(these)) + " link" + (if count(these) == 1 then "" else "s"))
+print "hosts:"
+for host in urls.map(u => u.host).filter(host => host != "").unique() {
+	n = #urls.filter(u => u.host == host)
+	print "  ${host}: ${n} link${if n == 1 then "" else "s"}"
 }
-no_host = [l for l in absolute if parse_url(l).host == nil]
-print("  (no host): " + join(no_host, ", "))
+print "  (no host): ${urls.filter(u => u.host == "").map(url_text).join(", ")}"
 
-print("queries:")
-for link in absolute {
-	u = parse_url(link)
-	if u.query != nil {
-		fields = query_map(u.query)
-		print("  " + u.path + "  " + join([k + " = " + fields[k] for k in keys(fields)], ", "))
-	}
+print "queries:"
+for u in urls.filter(u => u.query != "") {
+	fields = query_map(u.query)
+	print "  ${u.path}  ${fields.keys().map(key => "${key} = ${fields[key]}").join(", ")}"
 }
 
-print("ports and fragments:")
-for link in absolute {
-	u = parse_url(link)
-	if u.port != nil or u.fragment != nil {
-		print("  " + u.host + (if u.port != nil then ":" + text(u.port) else "") + (if u.fragment != nil then "  #" + u.fragment else ""))
-	}
+print "ports and fragments:"
+for u in urls.filter(u => u.port != 0 or u.fragment != "") {
+	port = if u.port == 0 then "" else ":${u.port}"
+	fragment = if u.fragment == "" then "" else "  #${u.fragment}"
+	print "  ${u.host}${port}${fragment}"
 }
 
 # a search link built back: the values encoded, parsed again to the same map
-wanted = {q: "warp & wasm", lang: "de", page: "2"}
+wanted = {q: "wap & wasm", lang: "de", page: "2"}
 built = "https://shop.example.com/search?" + query_text(wanted)
-print("built: " + built)
-print("round trip: " + text(query_map(parse_url(built).query) == wanted))
-print("encoded: " + url_encode("Grüße, 100%") + "  decoded: " + url_decode(url_encode("Grüße, 100%")))
-print("malformed kept: " + url_decode("100%zz"))
+print "built: ${built}"
+print "round trip: ${query_map(parse_url(built).query) == wanted}"
+print "encoded: ${url_encode("Grüße, 100%")}  decoded: ${url_decode(url_encode("Grüße, 100%"))}"
+print "malformed kept: ${url_decode("100%zz")}"
