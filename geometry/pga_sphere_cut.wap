@@ -4,8 +4,7 @@
 use pga
 use pga_draw
 use draw
-canvas.width = 480
-canvas.height = 360
+canvas(480, 360)
 
 ball = sphere(point(1, 0.5, 1), 1.3)
 level = plane(0, 0, 1, -0.5) # z = 0.5

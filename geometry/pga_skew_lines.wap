@@ -4,8 +4,7 @@
 use pga
 use pga_draw
 use draw
-canvas.width = 480
-canvas.height = 360
+canvas(480, 360)
 
 l = point(-2, 0, 0) ⋎ point(2, 0, 0) # the x axis
 m = point(1, -2, 1.5) ⋎ point(1, 2, 1.5) # along y, 1.5 above

@@ -3,8 +3,7 @@
 # where they meet. The ground and a slope meet in a line; the line meets the ground in a point; the ground cuts the
 # sphere in a circle; the line pierces the sphere in two points. The camera orbits; drag the mouse to turn it yourself.
 use pga_draw
-canvas.width = 640
-canvas.height = 480
+canvas(640, 480)
 
 ground = plane(0, 0, 1, 0) # z = 0
 slope = plane(1, 0, 1, -2) # x + z = 2

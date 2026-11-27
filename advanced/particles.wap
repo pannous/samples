@@ -67,8 +67,7 @@ render() := {
 	show()
 }
 
-canvas.width = width
-canvas.height = height
+canvas(width, height)
 clear(canvas)
 spawn(30, 40, 25)
 spawn(60, 25, 25)

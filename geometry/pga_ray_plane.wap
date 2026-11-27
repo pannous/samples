@@ -4,8 +4,7 @@
 use pga
 use pga_draw
 use draw
-canvas.width = 480
-canvas.height = 360
+canvas(480, 360)
 zoom(40)
 
 ground = plane(0, 0, 1, 0) # z = 0
