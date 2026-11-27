@@ -12,7 +12,7 @@ levenshtein(a, b) := {
 			deletion = prev#(j + 1) + 1
 			insertion = curr#j + 1
 			substitution = prev#j + cost
-			best = min(deletion, insertion, substitution)
+			best = min([deletion, insertion, substitution])
 			curr.push(best)
 		}
 		prev = curr
