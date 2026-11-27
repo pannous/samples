@@ -2,7 +2,7 @@
 # insertion sort and merge sort over a list of integers
 
 fun insertion_sort(items) {
-	var a = items.copy()
+	a = items.copy()
 	for i in 1 ..< #a {
 		key = a[i]
 		j = i - 1
