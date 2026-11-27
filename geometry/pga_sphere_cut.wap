@@ -1,7 +1,9 @@
 #!/usr/bin/env warp
 # What circle do a sphere and a plane cut? Its centre is the foot of the sphere's centre on the plane, its radius
 # √(r² - d²) for the centre's distance d from the plane (card pga-visualization, lib/pga_draw.warp)
+use pga
 use pga_draw
+use draw
 canvas.width = 480
 canvas.height = 360
 

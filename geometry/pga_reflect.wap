@@ -1,7 +1,9 @@
 #!/usr/bin/env warp
 # Where is a point's mirror image in a plane? The plane's sandwich m·p·m̃, m.reflect(p), reflects it; the segment
 # between the two is square to the mirror and halved by it (card pga-visualization, lib/pga_draw.warp)
+use pga
 use pga_draw
+use draw
 canvas.width = 480
 canvas.height = 360
 orbit(2.1, 0.45) # looking along the mirror, so the two lie either side of it

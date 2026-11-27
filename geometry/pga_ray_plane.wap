@@ -1,7 +1,9 @@
 #!/usr/bin/env warp
 # Where does this ray hit the plane? A ray from start through a second point, joined into a line (⋎), meets the
 # ground (⋏) in a point; the ray reaches it when it lies ahead of the start (card pga-visualization, lib/pga_draw.warp)
+use pga
 use pga_draw
+use draw
 canvas.width = 480
 canvas.height = 360
 zoom(40)
