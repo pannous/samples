@@ -16,7 +16,7 @@ fun levenshtein(a, b) {
 			let deletion = prev[j] + 1
 			let insertion = curr[j - 1] + 1
 			let substitution = prev[j - 1] + cost
-			curr.push(min(deletion, insertion, substitution))
+			curr.push(min([deletion, insertion, substitution]))
 		}
 		prev = curr
 	}
