@@ -124,5 +124,5 @@ on key {
 	}
 }
 
-canvas.resize(width, height)
+canvas(width, height)
 #bodies

@@ -24,4 +24,4 @@ print "the mapped list itself back from the GPU: \(t3 - t2) ms, last item \(ys#n
 # ys was read on the CPU above, but its buffer also stayed on the GPU: this map starts from there, without an upload
 zs = ys.map(y => exp(sin(y)) + cos(y * 2)) @gpu
 t4 = clock()
-print "mapped again on the GPU from the kept buffer: \(t4 - t3) ms, last item \(round(zs#n, 6))"
+print "mapped again on the GPU from the kept buffer: \(t4 - t3) ms, last item \(round_to(zs#n, 6))"

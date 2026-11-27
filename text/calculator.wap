@@ -6,8 +6,8 @@
 global input = ""
 global pos = 0
 
-peek() := if pos < input.bytecount then byte_slice(input, pos, pos + 1) else ""
-advance() := { pos = pos + 1; return byte_slice(input, pos - 1, pos) }
+peek() := if pos < #input then input[pos .. pos + 1] else ""
+advance() := { pos = pos + 1; return input[pos - 1 .. pos] }
 skip_spaces() := { while peek() == " " { advance() } }
 is_digit_text(c) := c >= "0" and c <= "9"
 is_letter_text(c) := c >= "a" and c <= "z"
@@ -17,7 +17,7 @@ is_letter_text(c) := c >= "a" and c <= "z"
 # term   = factor (('*' | '/' | '%' | '^') factor)*
 # factor = number | '(' expr ')' | '-' factor | func '(' expr ')' | constant
 
-parse_expr() := {
+parse_expr(): float := {
 	left = parse_term()
 	while true {
 		skip_spaces()
@@ -28,7 +28,7 @@ parse_expr() := {
 	}
 }
 
-parse_term() := {
+parse_term(): float := {
 	left = parse_factor()
 	while true {
 		skip_spaces()
@@ -52,7 +52,7 @@ apply(name, arg) := {
 	return error "Unknown function: " + name
 }
 
-parse_factor() := {
+parse_factor(): float := {
 	skip_spaces()
 	c = peek()
 	if c == "(" {
@@ -88,7 +88,7 @@ parse_number() := {
 	skip_spaces()
 	start = pos
 	while is_digit_text(peek()) or peek() == "." { advance() }
-	return byte_slice(input, start, pos) as float
+	return input[start .. pos] as float
 }
 
 calc(text) := {

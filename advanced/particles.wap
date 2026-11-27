@@ -67,7 +67,7 @@ render() := {
 	show()
 }
 
-canvas.resize(width, height)
+canvas(width, height)
 clear(canvas)
 spawn(30, 40, 25)
 spawn(60, 25, 25)

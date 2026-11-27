@@ -2,7 +2,7 @@
 # insertion sort and merge sort over a list of integers
 
 fun insertion_sort(items) {
-	var a = items.copy()
+	a = items.copy()
 	for i in 1 ..< #a {
 		key = a[i]
 		j = i - 1
@@ -39,7 +39,7 @@ fun merge(left, right) {
 	return result
 }
 
-fun merge_sort(items) {
+merge_sort(items: list<int>): list<int> := {
 	if #items <= 1 { return items }
 	# warp: `/` divides exactly (5/2 is 2.5, "index must be an integer"); integer halving is `len(items) /! 2` (`//` starts a comment)
 	mid = #items /! 2

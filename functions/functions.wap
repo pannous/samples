@@ -18,7 +18,7 @@ factorial(n) := {
 
 # Higher-order functions (no map needed: a function of one item applies to a whole list, see below)
 filter(list, predicate: function) := {
-	var result = []
+	result = []
 	for item in list {
 		if predicate(item) {
 			result.push(item)

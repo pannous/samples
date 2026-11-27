@@ -2,8 +2,7 @@
 # Sieve of Eratosthenes, then binary search over the primes found
 
 fun sieve(limit) {
-	# warp: `[true] * n` is refused as ambiguous (repeat or multiply?); repeating a list is `(limit + 1) times [true]`
-	is_prime = (limit + 1) times [true]
+	is_prime = [true for n in 0 to limit]
 	is_prime#1 = false
 	is_prime#2 = false
 	for i in 2..limit {
@@ -16,7 +15,7 @@ fun sieve(limit) {
 			}
 		}
 	}
-	var primes = []
+	primes = []
 	for n in 0..limit {
 		if is_prime[n] { primes.push(n) }
 	}
@@ -32,7 +31,7 @@ fun binary_search(list, target) {
 		if list[mid] == target { return mid }
 		if list[mid] < target { low = mid + 1 } else { high = mid - 1 }
 	}
-	return - 1
+	return -1
 }
 
 primes = sieve(100)
