@@ -42,12 +42,12 @@ fun dijkstra(graph, start) {
 	return [dist, prev]
 }
 
-fun path_to(prev, target) {
+fun path_to(prev, target: text) {
 	path = [target]
 	node = target
 	while prev.has(node) {
 		node = prev[node]
-		path.insert(0, node)
+		path.insert(node, at: 0)
 	}
 	return path.join("")
 }
