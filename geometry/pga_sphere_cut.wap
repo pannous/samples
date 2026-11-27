@@ -2,7 +2,8 @@
 # What circle do a sphere and a plane cut? Its centre is the foot of the sphere's centre on the plane, its radius
 # √(r² - d²) for the centre's distance d from the plane (card pga-visualization, lib/pga_draw.warp)
 use pga_draw
-canvas.resize(480, 360)
+canvas.width = 480
+canvas.height = 360
 
 ball = sphere(point(1, 0.5, 1), 1.3)
 level = plane(0, 0, 1, -0.5) # z = 0.5

@@ -124,5 +124,6 @@ on key {
 	}
 }
 
-canvas.resize(width, height)
+canvas.width = width
+canvas.height = height
 #bodies

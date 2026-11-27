@@ -4,7 +4,8 @@
 use draw
 width = 300
 height = 100
-canvas.resize(width, height)
+canvas.width = width
+canvas.height = height
 clear(canvas)
 rect(10, 56, 60, 34, blue)
 circle(120, 72, 20, color(0xFFD700))

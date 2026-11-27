@@ -2,7 +2,8 @@
 # How far is a point from a line? The plane through the point square to the line (inner) meets the line in the foot;
 # the distance is from the point to the foot (card pga-visualization, lib/pga_draw.warp)
 use pga_draw
-canvas.resize(480, 360)
+canvas.width = 480
+canvas.height = 360
 
 p = point(1, 1.5, 2)
 axis = point(-2, 0, 0) ⋎ point(2, 0, 0) # the x axis

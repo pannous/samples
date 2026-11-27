@@ -77,7 +77,8 @@ draw_panel(left, title, steps, shown) := {
 	label(left + 20, 50, "epoch ${round(10 * epochs * (shown - 1) / (count(steps) - 1)) / 10} of ${epochs}   error ${round(mean_error(points, centroids, labels))}", gray, 20)
 }
 
-canvas.resize(width, height)
+canvas.width = width
+canvas.height = height
 new_round()
 
 on key {
