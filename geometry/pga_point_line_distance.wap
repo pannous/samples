@@ -8,7 +8,7 @@ canvas.height = 360
 p = point(1, 1.5, 2)
 axis = point(-2, 0, 0) ⋎ point(2, 0, 0) # the x axis
 base = point(foot(axis, p))
-print("the point is " + text(round(distance(p, axis), 3)) + " from the line, its foot " + text(place(base)))
+print("the point is " + text(round_to(distance(p, axis), 3)) + " from the line, its foot " + text(place(base)))
 
 clear(paper)
 sketch(axis, blue)
@@ -17,5 +17,5 @@ sketch(p, ink)
 sketch(base, blue)
 caption(p, "p", ink)
 caption(base, "foot", blue)
-caption(0, "distance " + text(round(distance(p, axis), 3)), red)
+caption(0, "distance " + text(round_to(distance(p, axis), 3)), red)
 show()
